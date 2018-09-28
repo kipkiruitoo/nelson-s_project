@@ -46,25 +46,32 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/car"
+            android:hint="Bike Reg Number"
+            android:layout_marginBottom="20dp"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/phone"
             android:gravity="center"
             android:hint="Phone number"
             android:layout_marginBottom="20sp"
-
             android:inputType="number"
             />
 
     </LinearLayout>
 
-<Button
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Confirm"
-    android:textColor="#fff"
-    android:background="@drawable/buttonstyle"
-    android:id="@+id/confirm"
-    android:layout_margin="10dp"
-    />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        android:textColor="#fff"
+        android:background="@drawable/buttonstyle"
+        android:id="@+id/confirm"
+        android:layout_margin="10dp"
+        />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
