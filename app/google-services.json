@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "722239716389",
+    "firebase_url": "https://myapplication-ebc85.firebaseio.com",
+    "project_id": "myapplication-ebc85",
+    "storage_bucket": "myapplication-ebc85.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722239716389:android:f4d77cda55129e5e",
+        "android_client_info": {
+          "package_name": "me.itsdavis.apps.uber"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "722239716389-i61q6fqk5ub9mnnimtmo8a92ksacuci7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.itsdavis.apps.uber",
+            "certificate_hash": "107b49b933c8be3334bd240460da900bd71935f0"
+          }
+        },
+        {
+          "client_id": "722239716389-egvq1ff7nrdo5rt271oir1nns1b0ubq7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATGOEEbODFCoKuTCFeNKuQaloCgxiHycA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "722239716389-egvq1ff7nrdo5rt271oir1nns1b0ubq7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
