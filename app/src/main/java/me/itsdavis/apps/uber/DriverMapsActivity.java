@@ -3,6 +3,7 @@ package me.itsdavis.apps.uber;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.Manifest;
@@ -20,6 +22,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akexorcist.googledirection.DirectionCallback;
+import com.akexorcist.googledirection.GoogleDirection;
+import com.akexorcist.googledirection.constant.AvoidType;
+import com.akexorcist.googledirection.model.Direction;
 import com.bumptech.glide.Glide;
 import com.directions.route.AbstractRouting;
 import com.directions.route.Route;
@@ -39,6 +45,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -79,6 +86,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private List<Polyline> polylines;
     private static final int[] COLORS = new int[]{R.color.primary_dark_material_light};
 
+    private static final String TAG = DriverMapsActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,6 +209,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                     LatLng pickupLatLng = new LatLng(locationLat,locationLng);
                     pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("pickup location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.pickup_marker)));
                     getRouteToMarker(pickupLatLng);
+//                    getRoute(pickupLatLng);
                 }
             }
 
@@ -209,7 +218,29 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
     }
-
+//
+//    private void getRoute(LatLng pickupLatLng){
+//        GoogleDirection.withServerKey("YOUR_SERVER_API_KEY")
+//                .from(new LatLng(37.7681994, -122.444538))
+//                .to(new LatLng(37.7749003,-122.4034934))
+//                .avoid(AvoidType.FERRIES)
+//                .avoid(AvoidType.HIGHWAYS)
+//                .execute(new DirectionCallback() {
+//                    @Override
+//                    public void onDirectionSuccess(Direction direction, String rawBody) {
+//                        if(direction.isOK()) {
+//                            // Do something
+//                        } else {
+//                            // Do something
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onDirectionFailure(Throwable t) {
+//                        // Do something
+//                    }
+//                });
+//    }
     private void getRouteToMarker(LatLng pickupLatLng) {
 
         Routing routing = new Routing.Builder()
@@ -227,6 +258,20 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.style_json));
+
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e(TAG, "Can't find style. Error: ", e);
+        }
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -250,7 +295,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             mLastLocation = location;
             LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
 
             String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
             DatabaseReference refAvailable = FirebaseDatabase.getInstance().getReference("driversAvailable");
