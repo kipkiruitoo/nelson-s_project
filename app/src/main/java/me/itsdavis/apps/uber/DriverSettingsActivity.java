@@ -93,7 +93,7 @@ public class DriverSettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                return;
+
 
             }
         });
@@ -174,7 +174,6 @@ public class DriverSettingsActivity extends AppCompatActivity {
                             mDriverDatabase.updateChildren(newImage);
 
                             finish();
-                            return;
 //                    }
                         } else {
                             // Handle failures

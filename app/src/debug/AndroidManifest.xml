@@ -1,0 +1,7 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="me.itsdavis.apps.uber">
+
+    <application>
+        <activity android:name="me.itsdavis.apps.uber.RegisterActivity"></activity>
+    </application>
+</manifest>

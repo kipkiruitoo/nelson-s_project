@@ -74,6 +74,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
 
         mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(userId);
 
+
         getUserInfo();
 
         mProfileImage.setOnClickListener(new View.OnClickListener() {

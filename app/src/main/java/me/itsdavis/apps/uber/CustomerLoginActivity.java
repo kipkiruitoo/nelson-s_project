@@ -20,7 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 
 public class CustomerLoginActivity extends AppCompatActivity {
-    private EditText mEmail, mPassword;
+    private EditText mEmail, mPassword, mPhone, cPassword, mName;
     private CircularProgressButton mLogin, mRegistration;
 
     private FirebaseAuth mAuth;
@@ -49,7 +49,9 @@ public class CustomerLoginActivity extends AppCompatActivity {
         };
 
         mEmail = findViewById(R.id.email);
+        mName = findViewById(R.id.name);
         mPassword = findViewById(R.id.password);
+        cPassword = findViewById(R.id.cpassword);
 
         mLogin = findViewById(R.id.login);
         mRegistration = findViewById(R.id.registration);
@@ -101,6 +103,9 @@ public class CustomerLoginActivity extends AppCompatActivity {
                 mLogin.startAnimation();
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
+                final String name = mName.getText().toString();
+                final String cpassword = cPassword.getText().toString();
+                final String phone = mPhone.getText().toString();
                 if (email.equals("")|| password.equals("")){
                     mEmail.setText("");
                     mPassword.setText("");
