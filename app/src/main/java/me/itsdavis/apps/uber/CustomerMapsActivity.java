@@ -63,7 +63,7 @@ public class CustomerMapsActivity extends FragmentActivity implements OnMapReady
     Location mLastLocation;
     LocationRequest mLocationRequest;
 
-    private Button mLogout, mSettings;
+    private Button mLogout, mSettings, mHistory;
     private Button mRequest;
 
     private LatLng pickupLocation;
@@ -73,6 +73,8 @@ public class CustomerMapsActivity extends FragmentActivity implements OnMapReady
     private Marker pickupMarker;
 
     private String destination;
+
+    private LatLng destinationLatLng;
 
     private LinearLayout mDriverInfo;
     private ImageView mDriverProfileImage;
@@ -91,6 +93,8 @@ public class CustomerMapsActivity extends FragmentActivity implements OnMapReady
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        destinationLatLng = new LatLng(0.0,0.0);
+
 
         mLogout = (Button) findViewById(R.id.logout);
         mRequest =  findViewById(R.id.request);
@@ -104,13 +108,24 @@ public class CustomerMapsActivity extends FragmentActivity implements OnMapReady
         mDriverProfileImage = findViewById(R.id.driverProfileImage);
 
 
+        mHistory = findViewById(R.id.history);
+
+        mHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(CustomerMapsActivity.this, HistoryActivity.class);
+                intent.putExtra("customerOrDriver", "Customers");
+                startActivity(intent);
+                return;
+            }
+        });
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(CustomerMapsActivity.this, LoginActivity.class);
                 startActivity(intent);
-                finish();
                 return;
             }
         });
@@ -121,40 +136,8 @@ public class CustomerMapsActivity extends FragmentActivity implements OnMapReady
 
 
                 if (requestBol){
-                    requestBol = false;
-                    geoQuery.removeAllListeners();
-                    driverLocationRef.removeEventListener(driverLocationRefListener);
 
-
-                    if (driverFoundID != null){
-                        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("CustomerRequest");
-                        driverRef.removeValue();
-                        driverFoundID = null;
-//
-
-                    }
-
-                    driverFound = false;
-                    radius = 1;
-                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-                    GeoFire geoFire = new GeoFire(ref);
-                    geoFire.removeLocation(userId);
-
-                    if(pickupMarker != null){
-                        pickupMarker.remove();
-                    }
-                    mRequest.setText("call Boda");
-                    mDriverInfo.setVisibility(View.GONE);
-
-
-                    mDriverCar.setText("");
-                    mDriverPhone.setText("");
-                    mDriverName.setText("");
-                    mDriverProfileImage.setImageResource(R.mipmap.user_image);
-
-
+                    endRide();
                 }else{
                     requestBol = true;
 
@@ -196,6 +179,7 @@ public class CustomerMapsActivity extends FragmentActivity implements OnMapReady
 
                 destination = place.getName().toString();
 //                Log.i(TAG, "Place: " + place.getName());
+                destinationLatLng = place.getLatLng();
                 Toast.makeText(CustomerMapsActivity.this, "you have selected "+ destination, Toast.LENGTH_LONG).show();
             }
 
@@ -230,10 +214,13 @@ public class CustomerMapsActivity extends FragmentActivity implements OnMapReady
                     HashMap map = new HashMap();
                     map.put("customerRideId", customerId);
                     map.put("destination", destination);
+                    map.put("destinationLat", destinationLatLng.latitude);
+                    map.put("destinationLng", destinationLatLng.longitude);
                     driverRef.updateChildren(map);
 
                     getDriverLocation();
                     getDriverInfo();
+                    getHasRideEnded();
                     mRequest.setText("Looking for Driver Location....");
 
 
@@ -359,7 +346,65 @@ public class CustomerMapsActivity extends FragmentActivity implements OnMapReady
             }
         });
     }
+    private DatabaseReference driveHasEndedRef;
+    private ValueEventListener driverHasEndedRefListener;
+    private void getHasRideEnded(){
+       driveHasEndedRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("CustomerRequest").child("customerRideId");
+       driverHasEndedRefListener = driveHasEndedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
 
+                }else{
+
+                    endRide();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private  void endRide(){
+
+        requestBol = false;
+        geoQuery.removeAllListeners();
+        driverLocationRef.removeEventListener(driverLocationRefListener);
+
+        driveHasEndedRef.removeEventListener(driverHasEndedRefListener);
+
+        if (driverFoundID != null){
+            DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("CustomerRequest");
+            driverRef.removeValue();
+            driverFoundID = null;
+//
+
+        }
+
+        driverFound = false;
+        radius = 1;
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+        GeoFire geoFire = new GeoFire(ref);
+        geoFire.removeLocation(userId);
+
+        if(pickupMarker != null){
+            pickupMarker.remove();
+        }
+        mRequest.setText("call Boda");
+        mDriverInfo.setVisibility(View.GONE);
+
+
+        mDriverCar.setText("");
+        mDriverPhone.setText("");
+        mDriverName.setText("");
+        mDriverProfileImage.setImageResource(R.mipmap.user_image);
+
+
+    }
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;

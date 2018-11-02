@@ -38,13 +38,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="70dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:background="@color/colorPrimaryDark"
         android:hapticFeedbackEnabled="true"
         android:orientation="horizontal"
-        android:visibility="gone"
+        android:visibility="visible"
 
         >
+
 
         <ImageView
             android:id="@+id/customerProfileimage"
@@ -81,6 +84,7 @@
 
                 />
 
+
             <TextView
                 android:id="@+id/customerdestination"
                 android:layout_width="wrap_content"
@@ -95,17 +99,48 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_gravity="bottom"
-        android:id="@+id/call"
-        android:visibility="gone"
-        android:background="@drawable/buttonstyle"
-        android:textColor="#fff"
-        android:drawableLeft="@drawable/ic_call"
-        android:text="call"
+        >
 
-        />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+
+            android:id="@+id/call"
+           android:layout_margin="10dp"
+            android:background="@drawable/buttonstyle"
+            android:textColor="#fff"
+            android:text="call"
+            />
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity=""
+            android:id="@+id/rideStatus"
+            android:layout_margin="10dp"
+            android:background="@drawable/buttonstyle"
+            android:textColor="#fff"
+
+            android:text="Pick Customer"
+
+            />
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity=""
+            android:id="@+id/cancel"
+            android:layout_margin="10dp"
+            android:background="@drawable/buttonstyle"
+            android:textColor="#fff"
+
+            android:text="Cancel"
+
+            />
+    </LinearLayout>
+
 </FrameLayout>
