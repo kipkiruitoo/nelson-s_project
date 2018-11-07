@@ -37,6 +37,7 @@ import java.util.Map;
 
 public class CustomerSettingsActivity extends AppCompatActivity {
 
+//    declare variables of text fields and image view
     private EditText mNameField, mPhoneField;
     private Button mBack, mConfirm;
 
@@ -59,7 +60,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_settings);
-
+//assign the variables with respecive inputs
         mNameField = (EditText) findViewById(R.id.name);
         mPhoneField = (EditText) findViewById(R.id.phone);
 
@@ -72,11 +73,15 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         userId = mAuth.getCurrentUser().getUid();
 
+//        get firebase data reference
+
         mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(userId);
 
 
+//        call getuserinfo method
         getUserInfo();
 
+//        when the imageview is clicked it starts an intent to open the gallery and choose the image
         mProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,7 +91,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                 startActivityForResult(intent, 1);
             }
         });
-//        confirm onclick listener
+//        confirm onclick listener calls the saveuser info method
 
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +109,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
             }
         });
     }
-
+// function to getuser info from the database
     private  void getUserInfo(){
         mCustomerDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -135,7 +140,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
             }
         });
     }
-
+//method to save inputted user information to the database
     private void saveUserInformation() {
 
         mName = mNameField.getText().toString();
@@ -147,7 +152,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
 
 
         mCustomerDatabase.updateChildren(userInfo);
-
+//upload image to firebase storage
         if (resultUri != null) {
             final StorageReference filepath = FirebaseStorage.getInstance().getReference().child("profile_images").child(userId);
 
@@ -187,6 +192,8 @@ public class CustomerSettingsActivity extends AppCompatActivity {
             });
         }
     }
+
+//    this is called when the image has been chosen by the user
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

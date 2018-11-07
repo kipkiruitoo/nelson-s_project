@@ -38,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         mEmail = findViewById(R.id.email);
         mPassword = findViewById(R.id.password);
 
+// this is a listener that listens if there is auser currently loggged in
 
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -50,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     DatabaseReference usertype = FirebaseDatabase.getInstance().getReference().child("usertype").child(userid);
 
-
+//        if there is, , it checks for the user type of the user in the database then redirects to the respective activities
                     usertype.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -80,8 +81,10 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         };
-
+//initialize the  rgister floating button
         FloatingActionButton reg = findViewById(R.id.reg);
+
+//        on click listener redirects to the register activity when the floating button is clicked
         reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+//        submits the form
         Button login = findViewById(R.id.login);
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +101,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 //                login.startAnimation();
+
+//                validates the input to check for empty fields
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
                 if (email.equals("") || password.equals("")) {
@@ -107,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
 //                    mLogin.revertAnimation();
 
                 } else {
+//                    firebase function to sign in with firebase auth
                     mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -131,6 +138,8 @@ public class LoginActivity extends AppCompatActivity {
     }
     @Override
     protected void onStart() {
+
+//        start the auth listener when the app starts
         super.onStart();
         mAuth.addAuthStateListener(firebaseAuthListener);
     }
@@ -138,6 +147,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+//        stop the listener when the app stops
         mAuth.removeAuthStateListener(firebaseAuthListener);
     }
 }

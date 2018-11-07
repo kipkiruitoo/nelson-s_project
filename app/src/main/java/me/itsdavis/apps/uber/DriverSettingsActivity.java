@@ -53,7 +53,7 @@ public class DriverSettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_settings);
-
+//assign the variables with respecive inputs
         mNameField = (EditText) findViewById(R.id.name);
         mPhoneField = (EditText) findViewById(R.id.phone);
 
@@ -66,11 +66,13 @@ public class DriverSettingsActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         userId = mAuth.getCurrentUser().getUid();
+        //        get firebase data reference
 
         mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userId);
 
+//        call getuserinfo method
         getUserInfo();
-
+//        when the imageview is clicked it starts an intent to open the gallery and choose the image
         mProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,7 +82,7 @@ public class DriverSettingsActivity extends AppCompatActivity {
                 startActivityForResult(intent, 1);
             }
         });
-//        confirm onclick listener
+//                confirm onclick listener calls the saveuser info method
 
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +100,7 @@ public class DriverSettingsActivity extends AppCompatActivity {
             }
         });
     }
-
+    // function to getuser info from the database
     private  void getUserInfo(){
         mDriverDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -133,7 +135,7 @@ public class DriverSettingsActivity extends AppCompatActivity {
             }
         });
     }
-
+    //method to save inputted user information to the database
     private void saveUserInformation() {
 
         mName = mNameField.getText().toString();
@@ -146,7 +148,7 @@ public class DriverSettingsActivity extends AppCompatActivity {
         userInfo.put("car", mCar);
 
         mDriverDatabase.updateChildren(userInfo);
-
+//upload image to firebase storage
         if (resultUri != null) {
             final StorageReference filepath = FirebaseStorage.getInstance().getReference().child("profile_images").child(userId);
 
@@ -185,6 +187,7 @@ public class DriverSettingsActivity extends AppCompatActivity {
             });
         }
     }
+    //    this is called when the image has been chosen by the user
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

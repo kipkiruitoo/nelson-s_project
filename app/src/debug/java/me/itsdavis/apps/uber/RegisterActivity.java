@@ -29,15 +29,15 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+//assign  the variables for the data input
         mEmail = findViewById(R.id.email);
         mName = findViewById(R.id.name);
         mPassword = findViewById(R.id.password);
         mPhone = findViewById(R.id.phone);
         cPassword = findViewById(R.id.cpassword);
-
+// get instance of firebase auth
         mAuth = FirebaseAuth.getInstance();
-
+// initialize the auth listener
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -53,15 +53,18 @@ public class RegisterActivity extends AppCompatActivity {
         };
 
         register = findViewById(R.id.register);
+//        runs when the register button is clicked
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+//                get values from the input fields
                 final String email = mEmail.getText().toString();
                 final String name = mName.getText().toString();
                 final String password = mPassword.getText().toString();
                 final String cpassword = cPassword.getText().toString();
                 final String phone = mPhone.getText().toString();
-
+//validate the input
                 if (email.equals("") || password.equals("")){
                     mEmail.setText("");
                     mPassword.setText("");
@@ -71,6 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }else
                 {
                     if (password.equals(cpassword)){
+//                        register a new firebase auth user
                         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -83,6 +87,7 @@ public class RegisterActivity extends AppCompatActivity {
 //                                mRegistration.setBackgroundResource(R.drawable.buttonstyle);
 
                                 }else{
+//                                    if successful? store name and phone number in the database
                                     String userid = mAuth.getCurrentUser().getUid();
                                     DatabaseReference currentuserdb = FirebaseDatabase.getInstance().getReference().child("usertype").child(userid);
                                     currentuserdb.setValue("customer");
@@ -114,12 +119,14 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+//        start the auth listener when the app starts
         mAuth.addAuthStateListener(firebaseAuthListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+//        stop the auth listener when the app stops
         mAuth.removeAuthStateListener(firebaseAuthListener);
     }
 }

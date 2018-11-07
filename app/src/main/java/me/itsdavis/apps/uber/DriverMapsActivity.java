@@ -82,6 +82,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
     private DatabaseReference mCustomerDatabase;
 
+    private float rideDistance;
+
 
     private static final int REQUEST_CALL = 1;
 
@@ -310,6 +312,9 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     public void onLocationChanged(Location location) {
         if(getApplicationContext()!=null){
 
+            if(!customerId.equals("") && mLastLocation!=null && location != null){
+                rideDistance += mLastLocation.distanceTo(location)/1000;
+            }
             mLastLocation = location;
             LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -549,6 +554,7 @@ private  void disconnectDriver(){
 
 
 
+        rideDistance = 0;
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
         GeoFire geoFire = new GeoFire(ref);
@@ -593,6 +599,7 @@ private  void disconnectDriver(){
         map.put("driver", userId);
         map.put("customer", customerId);
         map.put("rating", 0);
+        map.put("distance", rideDistance);
         map.put("timestamp", getCurrentTimestamp());
 
         historyRef.child(requestId).updateChildren(map);
